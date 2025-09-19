@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Booking Assistant</title>
+    <meta name="description" content="Hotel booking chatbot - Book your stay with our AI assistant">
+    <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header" role="banner">
+            <h1>🏨 Hotel Booking Assistant</h1>
+            <p>I'll help you book your perfect stay in just a few simple steps!</p>
+        </header>
+
+        <!-- Help Panel -->
+        <div class="help-panel" role="complementary" aria-labelledby="help-title">
+            <h2 id="help-title" class="help-title">What I'll collect:</h2>
+            <ul class="help-list" role="list">
+                <li role="listitem">Your name</li>
+                <li role="listitem">Check-in & check-out dates</li>
+                <li role="listitem">Number of guests (1-10)</li>
+                <li role="listitem">Breakfast preference (optional)</li>
+                <li role="listitem">Payment method (optional)</li>
+            </ul>
+        </div>
+
+        <!-- Chat Container -->
+        <main class="chat-container" role="main">
+            <div
+                class="chat-messages"
+                id="chatMessages"
+                role="log"
+                aria-live="polite"
+                aria-label="Conversation with booking assistant"
+                tabindex="0"
+            >
+                <!-- Initial bot message -->
+                <div class="message bot-message" role="article">
+                    <div class="message-content">
+                        <p>Hello! Welcome to our hotel booking service. Let's get started!</p>
+                        <p>What's your name?</p>
+                    </div>
+                    <div class="message-time" id="initialTime" aria-label="Message time"></div>
+                </div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div
+                class="loading-indicator"
+                id="loadingIndicator"
+                style="display: none;"
+                aria-hidden="true"
+                role="status"
+            >
+                <div class="loading-dots" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <span class="sr-only">Processing your message...</span>
+            </div>
+        </main>
+
+        <!-- Input Area -->
+        <div class="input-container" role="form">
+            <form id="chatForm" aria-label="Send message form">
+                <div class="input-wrapper">
+                    <label for="messageInput" class="sr-only">Type your message</label>
+                    <input
+                        type="text"
+                        id="messageInput"
+                        placeholder="Type your message here..."
+                        required
+                        aria-describedby="inputHint"
+                        autocomplete="off"
+                        maxlength="500"
+                    >
+                    <!-- Input validation hint -->
+                    <div
+                        id="inputHint"
+                        class="input-hint"
+                        style="display: none;"
+                        role="alert"
+                        aria-live="polite"
+                    ></div>
+
+                    <button
+                        type="submit"
+                        id="sendButton"
+                        aria-label="Send message"
+                        title="Send message (or press Enter)"
+                    >
+                        <span aria-hidden="true">➤</span>
+                        <span class="sr-only">Send</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Booking Confirmation Modal -->
+    <div
+        class="modal-overlay"
+        id="bookingModal"
+        style="display: none;"
+        role="dialog"
+        aria-labelledby="modalTitle"
+        aria-modal="true"
+        aria-hidden="true"
+    >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">🎉 Booking Confirmed!</h2>
+                <button
+                    class="close-button"
+                    id="closeModal"
+                    aria-label="Close confirmation dialog"
+                    title="Close (press Escape)"
+                >
+                    &times;
+                </button>
+            </div>
+
+            <div class="modal-body" id="bookingDetails" role="document">
+                <!-- Booking details will be inserted here by JavaScript -->
+            </div>
+
+            <div class="modal-footer">
+                <button
+                    class="new-booking-btn"
+                    id="newBookingBtn"
+                    aria-label="Start a new booking"
+                >
+                    Start New Booking
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Toast for displaying errors -->
+    <div
+        id="errorToast"
+        class="error-toast"
+        style="display: none;"
+        role="alert"
+        aria-live="assertive"
+    >
+        <span id="errorMessage"></span>
+        <button
+            id="dismissError"
+            class="dismiss-btn"
+            aria-label="Dismiss error"
+            title="Dismiss"
+        >
+            &times;
+        </button>
+    </div>
+
+    <!-- Load JavaScript -->
+    <script src="{{ url_for('static', filename='chat.js') }}"></script>
+
+    <!-- Initialize timestamp for first message -->
+    <script>
+        // Set initial timestamp when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const initialTime = document.getElementById('initialTime');
+            if (initialTime) {
+                const now = new Date();
+                initialTime.textContent = now.toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                });
+                initialTime.setAttribute('aria-label', `Message sent at ${initialTime.textContent}`);
+            }
+        });
+    </script>
+</body>
+</html>
